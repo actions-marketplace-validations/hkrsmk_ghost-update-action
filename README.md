@@ -1,7 +1,6 @@
 # Ghost Update
 A short script to updated and restart ghost to the version specified. This is for [Ghost](https://github.com/TryGhost/Ghost).
-
-Restarts ghost using [appleboy's ssh action](https://github.com/appleboy/ssh-action).
+This is built similarly to [Ghost Restart](https://github.com/hkrsmk/ghost-restart-action).
 
 To use this action, please copy and paste the action.yml file into your own workflows folder, and insert your secrets accordingly.
  

@@ -1,0 +1,53 @@
+# themes ref: https://linuxhandbook.com/ghost-theme-github-actions/
+# https://stackoverflow.com/questions/61447350/automatically-pull-from-remote-using-github-actions
+
+name: ghost_update
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ .github/workflows/ghost_update.yml ]
+
+jobs:
+    
+  build:
+    env:
+      GHOST_VERSION: 4.16.0
+
+    runs-on: ubuntu-20.04
+      
+    steps:
+    - name: ssh and update ghost
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SUDO_PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd ${{ secrets.PATH_TO_GHOST }}
+          ${{ secrets.SUDO_PASSWORD }} | sudo -S ghost update $GHOST_VERSION
+          ghost update $GHOST_VERSION
+      
+    - name: restart ghost
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SUDO_PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: cd ${{ secrets.PATH_TO_GHOST }} && echo ${{ secrets.SUDO_PASSWORD }} | sudo -S ghost restart
+ 
+    - name: push to repo
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SUDO_PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd ${{ secrets.PATH_TO_GHOST }}/..
+          echo ${{ secrets.SUDO_PASSWORD }} | ${{ secrets.GIT_PULL_SCRIPT }}
+          sudo git add .
+          sudo git commit -m "Update Ghost to v${{ env.GHOST_VERSION }} with github actions"
+          ${{ secrets.GIT_PUSH_SCRIPT }}

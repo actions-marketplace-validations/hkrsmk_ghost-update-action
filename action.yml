@@ -1,7 +1,8 @@
 # themes ref: https://linuxhandbook.com/ghost-theme-github-actions/
 # https://stackoverflow.com/questions/61447350/automatically-pull-from-remote-using-github-actions
 
-name: ghost_update
+name: Ghost Update
+description: 'Updates and restarts Ghost before pushing a copy of the code to Github.
 
 on:
   push:
@@ -46,7 +47,7 @@ jobs:
         password: ${{ secrets.SUDO_PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          cd ${{ secrets.PATH_TO_GHOST }}/..
+          cd ${{ secrets.PATH_TO_GITHUB_REPO }}
           echo ${{ secrets.SUDO_PASSWORD }} | ${{ secrets.GIT_PULL_SCRIPT }}
           sudo git add .
           sudo git commit -m "Update Ghost to v${{ env.GHOST_VERSION }} with github actions"

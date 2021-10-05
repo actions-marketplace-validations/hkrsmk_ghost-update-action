@@ -2,7 +2,10 @@
 # https://stackoverflow.com/questions/61447350/automatically-pull-from-remote-using-github-actions
 
 name: Ghost Update
-description: 'Updates and restarts Ghost before pushing a copy of the code to Github.
+description: 'Updates and restarts Ghost before pushing a copy of the code to Github.'
+branding:
+  icon: arrow-up
+  color: gray-dark
 
 on:
   push:
